@@ -1,0 +1,91 @@
+// controllers/authController.js
+const { getDB } = require("../config/db");
+
+/**
+ * Registers a new user without password hashing (not recommended for production).
+ * @function
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ */
+async function registerUser(req, res) {
+  const { name, email, password, confirmPassword } = req.body;
+
+  // Basic validation
+  if (!name || !email || !password || password !== confirmPassword) {
+    return res.status(400).send("Invalid input or passwords do not match.");
+  }
+
+  try {
+    const db = getDB();
+
+    // Check if the email already exists
+    const existingUser = await db.collection("users").findOne({ email });
+    if (existingUser) {
+      return res.status(400).send("Email already in use.");
+    }
+
+    // Insert the user into the database without password hashing
+    const newUser = {
+      name,
+      email,
+      password, // Password is stored directly (not secure in production)
+      role: "user", // Default role
+      portfolio: { cash: 10000 }, // Starting cash for players
+      createdAt: new Date(),
+    };
+
+    await db.collection("users").insertOne(newUser);
+    res.redirect("/"); // Redirect to login after successful registration
+  } catch (error) {
+    console.error("Registration Error:", error);
+    res.status(500).send("Internal Server Error");
+  }
+}
+
+/**
+ * Logs in a user or admin without hashed password comparison.
+ * @function
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ */
+async function loginUser(req, res) {
+  const { email, password } = req.body;
+
+  try {
+    const db = getDB();
+
+    // Find the user by email
+    const user = await db.collection("users").findOne({ email });
+    console.log("Login attempt for user:", email); // Log the email being searched
+    console.log("User found:", user); // Log the retrieved user document
+
+    if (!user) {
+      return res.status(400).send("Invalid email or password.");
+    }
+
+    // Verify the password (direct comparison, since we're not using bcrypt)
+    if (password !== user.password) {
+      console.log("Password mismatch"); // Log if password does not match
+      return res.status(400).send("Invalid email or password.");
+    }
+
+    // Set user session
+    req.session.user = {
+      id: user._id,
+      role: user.role,
+      name: user.name,
+    };
+
+    // Redirect based on role
+    if (user.role === "admin") {
+      res.redirect("/auth/admin/dashboard");
+    } else {
+      res.redirect("/"); // User dashboard
+    }
+  } catch (error) {
+    console.error("Login Error:", error);
+    res.status(500).send("Internal Server Error");
+  }
+}
+
+module.exports = { registerUser, loginUser };

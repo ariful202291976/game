@@ -1,0 +1,22 @@
+<!-- login.ejs -->
+<link rel="stylesheet" href="/styles/login.css" />
+
+<div class="login-container">
+  <div class="login-card">
+    <h1>Login</h1>
+    <form action="/auth/login" method="POST">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required />
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required />
+      </div>
+      <button type="submit" class="login-button">Login</button>
+    </form>
+    <p class="register-link">
+      Don't have an account? <a href="/auth/register">Register</a>.
+    </p>
+  </div>
+</div>
