@@ -14,10 +14,6 @@ const ejsLayouts = require("express-ejs-layouts");
 dotenv.config();
 connectDB();
 
-// initializeAdmin()
-//   .then(() => console.log("Admin account initialized."))
-//   .catch((err) => console.error("Failed to initialize admin account:", err));
-
 const app = express();
 
 app.use(express.json()); // For JSON bodies
@@ -31,9 +27,28 @@ app.use(
     saveUninitialized: true,
   })
 );
-
 // Enable express-ejs-layouts
 app.use(ejsLayouts);
+
+// Middleware to set `user` in `res.locals`
+// app.use((req, res, next) => {
+//   res.locals.user = req.session.user || null;
+//   next();
+// });
+// app.js or server.js
+app.use((req, res, next) => {
+  res.locals.user = req.session.user || null;
+  res.locals.loginSuccess = req.session.loginSuccess || null;
+
+  // Clear the message after it has been passed
+  req.session.loginSuccess = null;
+
+  next();
+});
+
+initializeAdmin()
+  .then(() => console.log("Admin account initialized."))
+  .catch((err) => console.error("Failed to initialize admin account:", err));
 
 // Set EJS as the view engine and specify the views directory
 app.set("view engine", "ejs");

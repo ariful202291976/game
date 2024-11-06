@@ -16,7 +16,19 @@
     <!-- Main Content Area -->
     <main><%- body %></main>
 
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"><%= loginSuccess %></div>
+
     <!-- Footer -->
     <%- include("partials/footer") %>
+
+    <script>
+      // Show toast if loginSuccess message is provided
+      <% if (loginSuccess) { %>
+        const toast = document.getElementById("toast");
+        toast.classList.add("show");
+        setTimeout(() => { toast.classList.remove("show"); }, 3000);
+      <% } %>
+    </script>
   </body>
 </html>

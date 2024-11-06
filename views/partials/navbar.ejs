@@ -3,13 +3,15 @@
 <header>
   <nav class="navbar">
     <div class="nav-container">
-      <div class="nav-container>
-        <a href="/" class="navbar-brand">StockTrade</a>
-      </div>
-
+      <a href="/" class="navbar-brand">StockTrade</a>
       <ul class="nav-links">
+        <% if (user) { %>
+        <li><a href="/profile"><%= user.name %></a></li>
+        <li><a href="/auth/logout">Logout</a></li>
+        <% } else { %>
         <li><a href="/auth/login">Login</a></li>
         <!-- <li><a href="/auth/register">Register</a></li> -->
+        <% } %>
       </ul>
     </div>
   </nav>

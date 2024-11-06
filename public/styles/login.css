@@ -46,10 +46,10 @@
   text-align: left;
 }
 
-.form-group label {
+/* .form-group label {
   font-size: 0.9rem;
   color: #ccc;
-}
+} */
 
 .form-group input {
   width: 100%;
@@ -61,7 +61,7 @@
   margin-top: 0.3rem;
 }
 
-input[type="text"],
+input[type="email"],
 input[type="password"] {
   background-color: #444;
   color: #fff;

@@ -123,3 +123,48 @@ body {
 .footer p {
   color: #ffd700;
 }
+
+/* Toast Notification Styles */
+.toast {
+  visibility: hidden;
+  min-width: 250px;
+  background-color: #333;
+  background-color: #ffd700;
+  color: #fff;
+  color: black;
+  text-align: center;
+  border-radius: 5px;
+  padding: 16px;
+  position: fixed;
+  z-index: 1;
+  top: 60px; /* Position it at the top */
+  right: 30px; /* Position it to the right */
+  font-size: 17px;
+}
+
+.toast.show {
+  visibility: visible;
+  animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+@keyframes fadein {
+  from {
+    top: 0;
+    opacity: 0;
+  }
+  to {
+    top: 60px;
+    opacity: 1;
+  }
+}
+
+@keyframes fadeout {
+  from {
+    top: 60px;
+    opacity: 1;
+  }
+  to {
+    top: 0;
+    opacity: 0;
+  }
+}

@@ -10,7 +10,7 @@ const { connectDB } = require("./config/db");
 const { initializeAdmin } = require("./models/userModel");
 
 // Port number the server will listen on
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
 /**
  * Connect to the database and start the server.
