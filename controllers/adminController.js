@@ -1,20 +1,31 @@
+// controllers/adminController.js
 const { getDB } = require("../config/db");
 
+/**
+ * Retrieves statistics and the current game for the admin dashboard.
+ * @function getAdminDashboardStats
+ * @returns {Object} An object containing dashboard stats and the ongoing game (if any).
+ */
 async function getAdminDashboardStats() {
   const db = getDB();
 
-  // Fetch stats such as the total number of users, active games, and transactions
-  const totalUsers = await db.collection("users").countDocuments();
-  //   const totalGames = await db.collection("games").countDocuments();
-  //   const totalTransactions = await db
-  //     .collection("transactions")
-  //     .countDocuments();
+  try {
+    // Retrieve statistics for the dashboard as needed
+    const userCount = await db.collection("users").countDocuments();
+    const stockCount = await db.collection("stocks").countDocuments();
 
-  return {
-    totalUsers,
-    // totalGames,
-    // totalTransactions,
-  };
+    // Retrieve the ongoing game (assuming a game with "active" status exists)
+    const game = await db.collection("games").findOne({ status: "active" });
+
+    return {
+      userCount,
+      stockCount,
+      game, // Return the game data
+    };
+  } catch (error) {
+    console.error("Error fetching admin dashboard stats:", error);
+    throw error;
+  }
 }
 
 module.exports = { getAdminDashboardStats };

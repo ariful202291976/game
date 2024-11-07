@@ -46,3 +46,319 @@ h2 {
 p {
   color: #7f8c8d;
 }
+
+/* Styling for the game section */
+.game-section {
+  background-color: #ecf0f1;
+  padding: 20px;
+  margin-top: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* .game-section h3 {
+  color: #34495e;
+  margin-bottom: 15px;
+  font-size: 1.5em;
+}
+
+.game-section p {
+  color: #7f8c8d;
+  margin: 8px 0;
+  font-size: 1em;
+}
+
+.game-section p strong {
+  color: #34495e;
+} */
+/* Table Styling */
+.table-container {
+  margin-top: 20px;
+  width: 100%;
+  overflow-x: auto;
+  background-color: #ecf0f1;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+}
+
+table thead {
+  background-color: #34495e;
+  color: white;
+}
+
+table th,
+table td {
+  padding: 15px;
+  text-align: left;
+  font-size: 1em;
+  color: #34495e;
+}
+
+table th {
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+table tbody tr {
+  border-bottom: 1px solid #ccc;
+}
+
+table tbody tr:hover {
+  background-color: #e0eaf1;
+}
+
+table td {
+  color: #7f8c8d;
+}
+
+.table-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.table-buttons button {
+  padding: 8px 12px;
+  font-size: 0.9em;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.table-buttons .edit-button {
+  background-color: #3498db;
+  color: white;
+}
+
+.table-buttons .edit-button:hover {
+  background-color: #2980b9;
+}
+
+.table-buttons .delete-button {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.table-buttons .delete-button:hover {
+  background-color: #c0392b;
+}
+
+/* Styling for the Create New Game button */
+.create-game-button {
+  background-color: #3498db;
+  color: white;
+  padding: 10px 20px;
+  font-size: 1em;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 15px;
+}
+
+.create-game-button:hover {
+  background-color: #2980b9;
+}
+
+.create-game-button:active {
+  background-color: #1c6a99;
+  transform: scale(0.98);
+}
+
+/* Styling for the form */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Styling for the form fields */
+form div {
+  display: flex;
+  flex-direction: column;
+}
+
+form label {
+  font-size: 1em;
+  color: #34495e;
+  margin-bottom: 5px;
+}
+
+form input {
+  padding: 10px;
+  font-size: 1em;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+form input:focus {
+  border-color: #3498db;
+  outline: none;
+}
+
+form button {
+  padding: 12px 20px;
+  font-size: 1.2em;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+form button:hover {
+  background-color: #2980b9;
+}
+
+form button:active {
+  background-color: #1c6a99;
+  transform: scale(0.98);
+}
+
+/* Toast Styles */
+/* .toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: #4caf50;
+  color: white;
+  padding: 15px;
+  border-radius: 5px;
+  font-size: 16px;
+  z-index: 1000;
+  opacity: 1;
+  transition: opacity 0.5s ease-out;
+} */
+
+.toast.success {
+  background-color: #4caf50; /* Green */
+}
+
+.toast.error {
+  background-color: #f44336; /* Red */
+}
+
+/* user profile */
+
+/* General button styling */
+button.create-game-button,
+a.create-game-button {
+  background-color: #007bff; /* Blue background */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+button.create-game-button:hover,
+a.create-game-button:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Reset Button Specific Styling */
+button.reset-button {
+  background-color: #ff6b6b; /* Light red color for reset button */
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+  margin: auto;
+  margin-top: 10px;
+}
+
+button.reset-button:hover {
+  background-color: #e63946; /* Darker red on hover */
+}
+
+/* Marketplace Section Styling */
+.marketplace-section {
+  background-color: #f7f7f7; /* Light grey background */
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+}
+
+.marketplace-section h3 {
+  font-size: 18px;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.marketplace-section p {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 15px;
+}
+
+.marketplace-section .create-game-button {
+  display: inline-block;
+  margin-top: 10px;
+}
+
+/* user porfolio  */
+
+/* Stocks Table Section */
+.stocks-table {
+  margin-top: 20px;
+}
+
+.stocks-table table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #ecf0f1;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.stocks-table th,
+.stocks-table td {
+  padding: 12px 15px;
+  text-align: left;
+}
+
+.stocks-table th {
+  background-color: #2c3e50;
+  color: white;
+}
+
+.stocks-table td {
+  background-color: #ffffff;
+  border-bottom: 1px solid #ddd;
+}
+
+.stocks-table tr:hover {
+  background-color: #f1f1f1;
+}
+
+.sell-button {
+  background-color: #e74c3c;
+  color: white;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.sell-button:hover {
+  background-color: #c0392b;
+}
+
+.stocks-table p {
+  font-size: 16px;
+  color: #7f8c8d;
+}

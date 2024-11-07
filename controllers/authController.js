@@ -34,7 +34,7 @@ async function registerUser(req, res) {
     };
 
     await db.collection("users").insertOne(newUser);
-    res.redirect("/auth/login"); // Redirect to login after successful registration
+    res.redirect("/user/portfolio"); // Redirect to login after successful registration
   } catch (error) {
     console.error("Registration Error:", error);
     res.status(500).send("Internal Server Error");
@@ -70,9 +70,9 @@ async function loginUser(req, res) {
 
     // Redirect based on role
     if (user.role === "admin") {
-      res.redirect("/auth/admin/dashboard");
+      res.redirect("/admin/dashboard");
     } else {
-      res.redirect("/"); // User dashboard
+      res.redirect("/user/portfolio"); // User dashboard
     }
   } catch (error) {
     console.error("Login Error:", error);

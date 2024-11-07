@@ -1,0 +1,70 @@
+<!-- views/adminDashboard.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/styles/adminDashboard.css" />
+  </head>
+  <body>
+    <!-- Check if there's a toast message in the session -->
+
+    <div class="admin-dashboard-container">
+      <!-- Sidebar  -->
+      <aside class="sidebar">
+        <ul>
+          <li><a href="/admin/dashboard">Dashboard</a></li>
+          <li><a href="/admin/users">Manage Users</a></li>
+          <li><a href="/admin/stocks">Manage Stocks</a></li>
+          <li><a href="/admin/leaderboard">Leaderboard</a></li>
+        </ul>
+      </aside>
+
+      <!-- Main content area -->
+      <div class="main-content">
+        <h1>Create New Game</h1>
+        <form action="/admin/create-game" method="POST">
+          <div>
+            <label for="gameName">Game Name:</label>
+            <input
+              type="text"
+              id="gameName"
+              name="gameName"
+              required
+              placeholder="Enter game name"
+            />
+          </div>
+          <div>
+            <label for="startDateTime">Start Date and Time:</label>
+            <input
+              type="datetime-local"
+              id="startDateTime"
+              name="startDateTime"
+              required
+            />
+          </div>
+          <div>
+            <label for="endDateTime">End Date and Time:</label>
+            <input
+              type="datetime-local"
+              id="endDateTime"
+              name="endDateTime"
+              required
+            />
+          </div>
+          <button type="submit">Create Game</button>
+        </form>
+      </div>
+    </div>
+
+    <% if (gameSuccess) { %>
+    <div id="toast" class="toast success"><%= gameSuccess %></div>
+    <script>
+      setTimeout(function () {
+        document.getElementById("toast").style.opacity = "0";
+      }, 3000); // Hide toast after 3 seconds
+    </script>
+    <% } %>
+  </body>
+</html>

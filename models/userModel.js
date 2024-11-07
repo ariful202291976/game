@@ -96,4 +96,43 @@ async function initializeAdmin() {
   return existingAdmin;
 }
 
-module.exports = { validateUser, insertUser, initializeAdmin };
+/**
+ * Retrieves a user's profile information from the database.
+ * @param {string} userId - The ID of the user.
+ * @returns {Promise<Object>} - The user's profile information.
+ */
+async function getUserProfileModel(userId) {
+  const db = getDB();
+  try {
+    const user = await db
+      .collection("users")
+      .findOne({ _id: new ObjectId(userId) });
+
+    return user;
+  } catch (error) {
+    console.error("Error retrieving user profile:", error);
+    throw error;
+  }
+}
+
+// Get the user's portfolio
+async function getUserPortfolioModel(userId) {
+  const db = getDB();
+  try {
+    const user = await db
+      .collection("users")
+      .findOne({ _id: new ObjectId(userId) });
+    return user; // assuming portfolio is a field in the user document
+  } catch (error) {
+    console.error("Error retrieving user portfolio:", error);
+    throw error;
+  }
+}
+
+module.exports = {
+  validateUser,
+  insertUser,
+  initializeAdmin,
+  getUserProfileModel,
+  getUserPortfolioModel,
+};

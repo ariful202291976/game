@@ -1,49 +1,60 @@
 // models/gameModel.js
-
 const { getDB } = require("../config/db");
 const { ObjectId } = require("mongodb");
 
 /**
- * Creates a new game session.
- * @param {Object} gameData - Game details including duration and other configurations.
- * @returns {Promise<Object>} - Returns the newly created game document.
+ * Creates a new game document in the database.
+ * @param {Object} gameData - Data for the new game.
+ * @returns {Promise<Object>} - The created game document.
  */
-async function createGame(gameData) {
+async function createGameModel(gameData) {
   const db = getDB();
-  const newGame = {
-    ...gameData,
-    createdAt: new Date(),
-    isActive: true,
-    players: [],
-  };
-  const result = await db.collection("games").insertOne(newGame);
-  return result.ops[0];
+  console.log(gameData);
+  return await db.collection("games").insertOne(gameData);
+  // const result = await db.collection("games").insertOne(gameData);
+  // return result.ops[0];
 }
 
 /**
- * Ends the game by updating its status and calculating the winner.
- * @param {string} gameId - The ID of the game to end.
- * @param {string} winnerId - The ID of the winning user.
- * @returns {Promise<Object>} - Returns the updated game document with the winner.
+ * Finds a game by its ID.
+ * @param {string} gameId - The ID of the game to find.
+ * @returns {Promise<Object|null>} - The game document or null if not found.
  */
-async function endGame(gameId, winnerId) {
+async function findGameById(gameId) {
   const db = getDB();
-  return db
+  return await db.collection("games").findOne({ _id: new ObjectId(gameId) });
+}
+
+/**
+ * Gets all ongoing games.
+ * @returns {Promise<Array>} - An array of ongoing game documents.
+ */
+async function getOngoingGamesModel() {
+  const db = getDB();
+  return await db.collection("games").find({ status: "True" }).toArray();
+}
+
+/**
+ * Updates the status and other details of a game.
+ * @param {string} gameId - The ID of the game to update.
+ * @param {Object} updateData - Data to update in the game document.
+ * @returns {Promise<Object|null>} - The updated game document or null if not found.
+ */
+async function updateGameStatus(gameId, updateData) {
+  const db = getDB();
+  const result = await db
     .collection("games")
     .findOneAndUpdate(
       { _id: new ObjectId(gameId) },
-      { $set: { isActive: false, winner: winnerId, endedAt: new Date() } },
-      { returnDocument: "after" }
+      { $set: updateData },
+      { returnOriginal: false }
     );
+  return result.value;
 }
 
-/**
- * Retrieves the active game session.
- * @returns {Promise<Object|null>} - Returns the active game document or null if no active game.
- */
-async function getActiveGame() {
-  const db = getDB();
-  return db.collection("games").findOne({ isActive: true });
-}
-
-module.exports = { createGame, endGame, getActiveGame };
+module.exports = {
+  createGameModel,
+  findGameById,
+  getOngoingGamesModel,
+  updateGameStatus,
+};

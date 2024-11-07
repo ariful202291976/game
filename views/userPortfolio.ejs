@@ -1,0 +1,72 @@
+<!-- views/adminDashboard.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/styles/adminDashboard.css" />
+  </head>
+  <body>
+    <div class="admin-dashboard-container">
+      <!-- Sidebar  -->
+      <aside class="sidebar">
+        <ul>
+          <li><a href="/user/portfolio">Portfolio</a></li>
+          <li><a href="/user/marketplace">Marketplace</a></li>
+          <li><a href="/user/profile">Profile</a></li>
+        </ul>
+      </aside>
+
+      <div class="main-content">
+        <h2>Welcome, <%= user ? user.name : "User" %>!</h2>
+
+        <!-- Cash Balance -->
+        <div class="cash-balance">
+          <h3>Your Cash Balance</h3>
+          <p>
+            $<%= user && user.portfolio ? user.portfolio.cash.toFixed(2) : 0.00
+            %>
+          </p>
+        </div>
+
+        <!-- Stocks Table -->
+        <div class="stocks-table">
+          <h3>Your Stocks</h3>
+          <% if (user && user.portfolio && user.portfolio.stocks &&
+          user.portfolio.stocks.length > 0) { %>
+          <table>
+            <thead>
+              <tr>
+                <th>Stock Name</th>
+                <th>Value</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% user.portfolio.stocks.forEach((stock) => { %>
+              <tr>
+                <td><%= stock.name %></td>
+                <td><%= stock.value %></td>
+                <td>
+                  <form action="/user/sell-stock" method="POST">
+                    <input
+                      type="hidden"
+                      name="stockId"
+                      value="<%= stock._id %>"
+                    />
+                    <button type="submit" class="sell-button">Sell</button>
+                  </form>
+                </td>
+              </tr>
+              <% }); %>
+            </tbody>
+          </table>
+          <% } else { %>
+          <p>You don't own any stocks yet.</p>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

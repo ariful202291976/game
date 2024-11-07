@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/styles/adminDashboard.css" />
+  </head>
+  <body>
+    <div class="admin-dashboard-container">
+      <!-- Sidebar  -->
+      <aside class="sidebar">
+        <ul>
+          <li><a href="/user/portfolio">Portfolio</a></li>
+          <li><a href="/user/marketplace">Marketplace</a></li>
+          <li><a href="/user/profile">Profile</a></li>
+          <li><a href="/user/logout">Logout</a></li>
+        </ul>
+      </aside>
+
+      <!-- Main content area -->
+      <div class="main-content">
+        <h2>Welcome, <%= user.name %>!</h2>
+
+        <!-- Profile Information -->
+        <div class="profile-info">
+          <h3>Your Profile</h3>
+          <p><strong>Name:</strong> <%= user.name %></p>
+          <p><strong>Email:</strong> <%= user.email %></p>
+          <p>
+            <strong>Cash Balance:</strong> $<%= user.portfolio.cash.toFixed(2)
+            %>
+          </p>
+          <form action="/user/reset-password" method="POST">
+            <button class="reset-button" type="submit">Reset Password</button>
+          </form>
+        </div>
+
+        <!-- Marketplace Section -->
+        <div class="marketplace-section">
+          <h3>Marketplace</h3>
+          <p>Explore and buy new stocks in the marketplace.</p>
+          <a href="/user/marketplace" class="create-game-button"
+            >Go to Marketplace</a
+          >
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

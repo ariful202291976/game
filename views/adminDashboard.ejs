@@ -9,18 +9,60 @@
   </head>
   <body>
     <div class="admin-dashboard-container">
-      <!-- Sidebar -->
+      <!-- Sidebar  -->
       <aside class="sidebar">
         <ul>
+          <li><a href="/admin/dashboard">Dashboard</a></li>
           <li><a href="/admin/users">Manage Users</a></li>
           <li><a href="/admin/stocks">Manage Stocks</a></li>
-          <li><a href="/admin/games">Manage Games</a></li>
+          <li><a href="/admin/leaderboard">Leaderboard</a></li>
         </ul>
       </aside>
 
       <!-- Main content area -->
       <div class="main-content">
-        <h2>Welcome!</h2>
+        <h2>Welcome to the Admin Dashboard!</h2>
+
+        <!-- Game section -->
+        <div class="game-section">
+          <h3>Ongoing Games</h3>
+
+          <% if (game && game.length > 0) { %>
+          <table>
+            <thead>
+              <tr>
+                <th>Game Name</th>
+                <th>Start Time</th>
+                <th>End Time</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% game.forEach((g) => { %>
+              <tr>
+                <td><%= g.gameName %></td>
+                <td><%= g.startDateTime.toLocaleString() %></td>
+                <td><%= g.endDateTime.toLocaleString() %></td>
+                <td><%= g.status %></td>
+              </tr>
+              <% }); %>
+            </tbody>
+          </table>
+          <% } else { %>
+          <p>No ongoing games currently.</p>
+          <a href="/admin/create-game">
+            <button type="submit" class="create-game-button">
+              Create New Game
+            </button>
+          </a>
+          <% } %>
+        </div>
+
+        <a href="/admin/create-game">
+          <button type="submit" class="create-game-button">
+            Create New Game
+          </button>
+        </a>
       </div>
     </div>
   </body>

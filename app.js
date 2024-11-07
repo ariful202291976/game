@@ -4,10 +4,11 @@ const path = require("path");
 const dotenv = require("dotenv");
 const { connectDB } = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
+const adminRoutes = require("./routes/adminRoutes");
+const userRoutes = require("./routes/userRoutes");
 // Uncomment as needed
 // const stockRoutes = require("./routes/stockRoutes");
 // const portfolioRoutes = require("./routes/portfolioRoutes");
-// const adminRoutes = require("./routes/adminRoutes");
 const { initializeAdmin } = require("./models/userModel");
 const ejsLayouts = require("express-ejs-layouts");
 
@@ -40,8 +41,12 @@ app.use((req, res, next) => {
   res.locals.user = req.session.user || null;
   res.locals.loginSuccess = req.session.loginSuccess || null;
 
+  // Ensure gameSuccess is accessible globally in views
+  res.locals.gameSuccess = req.session.gameSuccess || null;
+
   // Clear the message after it has been passed
   req.session.loginSuccess = null;
+  req.session.gameSuccess = null;
 
   next();
 });
@@ -54,6 +59,13 @@ initializeAdmin()
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.set("layout", "layout"); // Set default layout to 'layout.ejs'
+// Middleware to set layout for admin routes
+// app.use((req, res, next) => {
+//   if (req.originalUrl.startsWith("/admin")) {
+//     res.locals.layout = "adminDashboardLayout"; // Set the admin dashboard layout for all admin pages
+//   }
+//   next();
+// });
 
 // Serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, "public")));
@@ -70,10 +82,11 @@ app.get("/", (req, res) => {
 
 // Routes
 app.use("/auth", authRoutes);
+app.use("/admin", adminRoutes);
+app.use("/user", userRoutes);
 
 // Uncomment these routes as needed
 // app.use("/stock", stockRoutes);
 // app.use("/portfolio", portfolioRoutes);
-// app.use("/admin", adminRoutes);
 
 module.exports = app;
