@@ -28,7 +28,7 @@ const createNewGame = async (req, res) => {
 const getAllOngoingGames = async (req, res) => {
   try {
     const games = await getOngoingGamesModel();
-    console.log("game", games);
+    // console.log("game", games);
     // res.render("admin/dashboard", { games });
     res.render("adminDashboard", {
       title: "Admin Dashboard",

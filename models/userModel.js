@@ -129,10 +129,30 @@ async function getUserPortfolioModel(userId) {
   }
 }
 
+/**
+ * Fetches all users from the database.
+ * @returns {Promise<Array>} - A promise that resolves to an array of users.
+ */
+async function getAllUsersModel() {
+  const db = getDB();
+  try {
+    // Fetch users where role is not "admin"
+    const users = await db
+      .collection("users")
+      .find({ role: { $ne: "admin" } })
+      .toArray();
+    return users;
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    throw error;
+  }
+}
+
 module.exports = {
   validateUser,
   insertUser,
   initializeAdmin,
   getUserProfileModel,
   getUserPortfolioModel,
+  getAllUsersModel,
 };

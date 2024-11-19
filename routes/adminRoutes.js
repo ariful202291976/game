@@ -1,6 +1,7 @@
 const express = require("express");
 const { getAllOngoingGames } = require("../controllers/gameController");
 const { createNewGame } = require("../controllers/gameController");
+const { getAllUsers } = require("../controllers/adminController");
 const router = express.Router();
 
 /**
@@ -30,15 +31,6 @@ function ensureAdmin(req, res, next) {
 router.get("/dashboard", ensureAdmin, async (req, res) => {
   try {
     await getAllOngoingGames(req, res);
-    // const games = await getAllOngoingGames();
-    // console.log("Stats game data:", games);
-
-    // res.render("adminDashboard", {
-    //   title: "Admin Dashboard",
-    //   user: req.session.user,
-    //   stats,
-    //   game: games,
-    // });
   } catch (error) {
     console.error("Error fetching admin dashboard data:", error);
     res.status(500).send("Internal Server Error");
@@ -46,8 +38,13 @@ router.get("/dashboard", ensureAdmin, async (req, res) => {
 });
 
 // Manage Users page content
-router.get("/users", ensureAdmin, (req, res) => {
-  res.render("manageUsers", { title: "Manage Users" });
+router.get("/users", ensureAdmin, async (req, res) => {
+  try {
+    await getAllUsers(req, res);
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    res.status(500).send("Internal Server Error");
+  }
 });
 
 // Manage Stocks page content

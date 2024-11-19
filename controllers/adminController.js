@@ -1,5 +1,6 @@
 // controllers/adminController.js
 const { getDB } = require("../config/db");
+const { getAllUsersModel } = require("../models/userModel");
 
 /**
  * Retrieves statistics and the current game for the admin dashboard.
@@ -28,4 +29,15 @@ async function getAdminDashboardStats() {
   }
 }
 
-module.exports = { getAdminDashboardStats };
+async function getAllUsers(req, res) {
+  try {
+    const users = await getAllUsersModel(); // Fetch all users from the database
+    console.log("users", users);
+    res.render("manageUsers", { title: "Manage Users", users });
+  } catch (error) {
+    console.error("Error displaying manage users page:", error);
+    res.status(500).send("Internal Server Error");
+  }
+}
+
+module.exports = { getAdminDashboardStats, getAllUsers };

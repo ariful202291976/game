@@ -37,6 +37,7 @@
   padding: 20px;
   width: 100%;
   height: 100vh;
+  overflow-y: scroll;
 }
 
 h2 {
@@ -52,26 +53,17 @@ p {
   background-color: #ecf0f1;
   padding: 20px;
   margin-top: 20px;
+  margin-bottom: 20px;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* .game-section h3 {
+.game-section h3 {
   color: #34495e;
   margin-bottom: 15px;
   font-size: 1.5em;
 }
 
-.game-section p {
-  color: #7f8c8d;
-  margin: 8px 0;
-  font-size: 1em;
-}
-
-.game-section p strong {
-  color: #34495e;
-} */
-/* Table Styling */
 .table-container {
   margin-top: 20px;
   width: 100%;
@@ -97,13 +89,17 @@ table td {
   padding: 15px;
   text-align: left;
   font-size: 1em;
-  color: #34495e;
+  /* color: #34495e; */
 }
 
 table th {
   font-weight: 600;
   text-transform: uppercase;
 }
+
+/* table td {
+  color: #34495e;
+} */
 
 table tbody tr {
   border-bottom: 1px solid #ccc;
@@ -114,7 +110,7 @@ table tbody tr:hover {
 }
 
 table td {
-  color: #7f8c8d;
+  color: #34495e;
 }
 
 .table-buttons {
@@ -328,6 +324,7 @@ button.reset-button:hover {
 .stocks-table td {
   padding: 12px 15px;
   text-align: left;
+  columns: white;
 }
 
 .stocks-table th {
