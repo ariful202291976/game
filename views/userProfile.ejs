@@ -12,9 +12,9 @@
       <aside class="sidebar">
         <ul>
           <li><a href="/user/portfolio">Portfolio</a></li>
-          <li><a href="/user/marketplace">Marketplace</a></li>
+          <li><a href="/games">Join Games</a></li>
+          <!-- <li><a href="/stocks">Marketplace</a></li> -->
           <li><a href="/user/profile">Profile</a></li>
-          <li><a href="/user/logout">Logout</a></li>
         </ul>
       </aside>
 
@@ -27,10 +27,7 @@
           <h3>Your Profile</h3>
           <p><strong>Name:</strong> <%= user.name %></p>
           <p><strong>Email:</strong> <%= user.email %></p>
-          <p>
-            <strong>Cash Balance:</strong> $<%= user.portfolio.cash.toFixed(2)
-            %>
-          </p>
+          <p><strong>Cash Balance:</strong> $<%= user.cash.toFixed(2) %></p>
           <form action="/user/reset-password" method="POST">
             <button class="reset-button" type="submit">Reset Password</button>
           </form>
@@ -40,9 +37,7 @@
         <div class="marketplace-section">
           <h3>Marketplace</h3>
           <p>Explore and buy new stocks in the marketplace.</p>
-          <a href="/user/marketplace" class="create-game-button"
-            >Go to Marketplace</a
-          >
+          <a href="/stocks" class="create-game-button">Go to Marketplace</a>
         </div>
       </div>
     </div>

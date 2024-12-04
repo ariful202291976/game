@@ -1,10 +1,9 @@
-<!-- views/adminDashboard.ejs -->
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title><%= title %></title>
+    <title>Marketplace</title>
     <link rel="stylesheet" href="/styles/adminDashboard.css" />
   </head>
   <body>
@@ -13,7 +12,7 @@
       <aside class="sidebar">
         <ul>
           <li><a href="/user/portfolio">Portfolio</a></li>
-          <li><a href="/user/marketplace">Marketplace</a></li>
+          <li><a href="/games">Join Games</a></li>
           <li><a href="/user/profile">Profile</a></li>
         </ul>
       </aside>
@@ -21,8 +20,61 @@
       <!-- Main content area -->
       <div class="main-content">
         <h2>Marketplace</h2>
-        <p>Here you can manage the stocks available for trading in the game.</p>
+
+        <!-- Display the stocks as cards -->
+        <div class="stock-cards-container">
+          <% if (stocks && stocks.length > 0) { %>
+          <% stocks.forEach(stock => { %>
+          <div class="stock-card">
+            <h3><%= stock.name %> (<%= stock.ticker %>)</h3>
+            <p><strong>Exchange:</strong> <%= stock.primary_exchange %></p>
+            <p><strong>Type:</strong> <%= stock.type %></p>
+            <p>
+              <strong>Price:</strong>
+              <% if (stock.price !== "N/A") { %> $<%= stock.price.toFixed(2) %>
+              <% } else { %> Not Available <% } %>
+            </p>
+            <button
+              class="create-game-button"
+              data-ticker="<%= stock.ticker %>"
+              data-name="<%= stock.name %>"
+              data-price="<%= stock.price %>"
+              <%= stock.price === "N/A" ? "disabled" : "" %>
+            >
+              Buy Stock
+            </button>
+          </div>
+          <% }) %>
+          <% } else { %>
+          <p>No stocks available.</p>
+          <% } %>
+        </div>
       </div>
     </div>
+
+    <!-- Modal -->
+    <div id="buyStockModal" class="modal">
+      <div class="modal-content">
+        <span class="close-button">&times;</span>
+        <h3>Buy Stock</h3>
+        <form id="buyStockForm" action="/buy/stock" method="POST">
+          <input type="hidden" name="ticker" id="stockTicker" />
+          <input type="hidden" name="price" id="stockPrice" />
+          <p>Stock Name: <span id="stockName"></span></p>
+          <p>Price per Unit: $<span id="pricePerUnit"></span></p>
+          <label for="quantity">Stock Quantity:</label>
+          <input
+            type="number"
+            name="quantity"
+            id="quantity"
+            min="1"
+            required
+          />
+          <button type="submit">Buy</button>
+        </form>
+      </div>
+    </div>
+
+    <script src="/js/modal.js"></script>
   </body>
 </html>

@@ -6,11 +6,11 @@ const { connectDB } = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const userRoutes = require("./routes/userRoutes");
-// Uncomment as needed
-// const stockRoutes = require("./routes/stockRoutes");
-// const portfolioRoutes = require("./routes/portfolioRoutes");
+
 const { initializeAdmin } = require("./models/userModel");
 const ejsLayouts = require("express-ejs-layouts");
+const { fetchAllStocks } = require("./controllers/stockController");
+const { getAvailableGames, joinGame } = require("./controllers/gameController");
 
 dotenv.config();
 connectDB();
@@ -84,9 +84,10 @@ app.get("/", (req, res) => {
 app.use("/auth", authRoutes);
 app.use("/admin", adminRoutes);
 app.use("/user", userRoutes);
-
-// Uncomment these routes as needed
-// app.use("/stock", stockRoutes);
-// app.use("/portfolio", portfolioRoutes);
+app.use("/stocks", fetchAllStocks);
+app.use("/games", getAvailableGames);
+app.post("/join/game", (req, res) => {
+  joinGame(req, res);
+});
 
 module.exports = app;

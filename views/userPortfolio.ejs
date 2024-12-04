@@ -13,7 +13,8 @@
       <aside class="sidebar">
         <ul>
           <li><a href="/user/portfolio">Portfolio</a></li>
-          <li><a href="/user/marketplace">Marketplace</a></li>
+          <li><a href="/games">Join Games</a></li>
+          <!-- <li><a href="/stocks">Marketplace</a></li> -->
           <li><a href="/user/profile">Profile</a></li>
         </ul>
       </aside>
@@ -24,10 +25,7 @@
         <!-- Cash Balance -->
         <div class="cash-balance">
           <h3>Your Cash Balance</h3>
-          <p>
-            $<%= user && user.portfolio ? user.portfolio.cash.toFixed(2) : 0.00
-            %>
-          </p>
+          <p>$<%= user && user ? user.cash.toFixed(2) : 0.00 %></p>
         </div>
 
         <!-- Stocks Table -->

@@ -66,14 +66,6 @@ router.get("/create-game", ensureAdmin, (req, res) => {
 
 // post new game
 router.post("/create-game", ensureAdmin, async (req, res) => {
-  const { gameName, startDateTime, endDateTime } = req.body;
-
-  // Here, you can implement the logic to store the game in your database.
-  // For now, let's log the values to the console:
-  console.log("Game Name:", gameName);
-  console.log("Start Date and Time:", startDateTime);
-  console.log("End Date and Time:", endDateTime);
-
   try {
     await createNewGame(req, res);
   } catch (error) {

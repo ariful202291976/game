@@ -8,7 +8,7 @@ const { getDB } = require("../config/db");
  */
 async function registerUser(req, res) {
   const { name, email, password, confirmPassword } = req.body;
-
+  console.log(name);
   // Basic validation
   if (!name || !email || !password || password !== confirmPassword) {
     return res.status(400).send("Invalid input or passwords do not match.");
@@ -27,13 +27,20 @@ async function registerUser(req, res) {
     const newUser = {
       name,
       email,
-      password, // Password is stored directly (not secure in production)
+      password,
       role: "user", // Default role
-      portfolio: { cash: 10000 }, // Starting cash for players
+      // portfolio: { cash: 0 }, // Starting cash for players
+      cash: 0,
       createdAt: new Date(),
     };
 
-    await db.collection("users").insertOne(newUser);
+    const result = await db.collection("users").insertOne(newUser);
+    req.session.user = {
+      id: result.insertedId,
+      role: newUser.role,
+      name: newUser.name,
+    };
+    req.session.loginSuccess = "Welcome, " + newUser.name + "!"; // Toast message
     res.redirect("/user/portfolio"); // Redirect to login after successful registration
   } catch (error) {
     console.error("Registration Error:", error);

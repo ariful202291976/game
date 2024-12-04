@@ -38,7 +38,7 @@ async function getUserPortfolio(req, res) {
   const userId = req.session.user?.id; // Get user ID from session
 
   try {
-    const user = await getUserPortfolioModel(userId);
+    const user = await getUserProfileModel(userId);
 
     if (!user) {
       return res.status(404).send("User not found");

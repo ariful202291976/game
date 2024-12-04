@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard - Available Games</title>
+    <link rel="stylesheet" href="/styles/adminDashboard.css" />
+  </head>
+  <body>
+    <div class="admin-dashboard-container">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <ul>
+          <li><a href="/user/portfolio">Portfolio</a></li>
+          <li><a href="/games">Join Game</a></li>
+          <!-- <li><a href="/stocks">Marketplace</a></li> -->
+          <li><a href="/user/profile">Profile</a></li>
+        </ul>
+      </aside>
+
+      <!-- Main content area -->
+      <div class="main-content">
+        <h2>Available Games</h2>
+
+        <!-- Games Table -->
+        <div class="game-section">
+          <% if (games && games.length > 0) { %>
+          <table>
+            <thead>
+              <tr>
+                <th>Game Name</th>
+                <th>Start Time</th>
+                <th>End Time</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% games.forEach((game) => { %> <% if (game.status === "True") {
+              %>
+              <tr>
+                <td><%= game.gameName %></td>
+                <td><%= new Date(game.startDateTime).toLocaleString() %></td>
+                <td><%= new Date(game.endDateTime).toLocaleString() %></td>
+                <td>
+                  <form action="/join/game" method="POST">
+                    <input
+                      type="hidden"
+                      name="gameId"
+                      value="<%= game._id %>"
+                    />
+                    <button type="submit" class="join-button">Join</button>
+                  </form>
+                </td>
+              </tr>
+              <% } %> <% }); %>
+            </tbody>
+          </table>
+          <% } else { %>
+          <!-- Fallback message if no games are available -->
+          <h4 class="no-games-message">
+            No games are currently available. Please check back later.
+          </h4>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

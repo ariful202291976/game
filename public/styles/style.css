@@ -112,6 +112,10 @@ body {
   font-size: 1.1rem;
   color: #ddd;
 }
+.main-content label {
+  font-size: 1.1rem;
+  color: #dddddd7e;
+}
 
 /* Footer */
 .footer {

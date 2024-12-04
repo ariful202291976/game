@@ -9,7 +9,6 @@ const { ObjectId } = require("mongodb");
  */
 async function createGameModel(gameData) {
   const db = getDB();
-  console.log(gameData);
   return await db.collection("games").insertOne(gameData);
   // const result = await db.collection("games").insertOne(gameData);
   // return result.ops[0];
@@ -35,6 +34,25 @@ async function getOngoingGamesModel() {
 }
 
 /**
+ * Fetches all games with the status "True" from the database.
+ * @function fetchActiveGames
+ * @returns {Promise<Array>} - Array of active game objects.
+ */
+async function fetchActiveGames() {
+  try {
+    const db = getDB();
+    const games = await db
+      .collection("games")
+      .find({ status: "True" })
+      .toArray();
+    return games;
+  } catch (error) {
+    console.error("Error fetching active games from the database:", error);
+    throw error; // Pass the error back to the controller
+  }
+}
+
+/**
  * Updates the status and other details of a game.
  * @param {string} gameId - The ID of the game to update.
  * @param {Object} updateData - Data to update in the game document.
@@ -56,5 +74,6 @@ module.exports = {
   createGameModel,
   findGameById,
   getOngoingGamesModel,
+  fetchActiveGames,
   updateGameStatus,
 };

@@ -32,7 +32,7 @@ async function getAdminDashboardStats() {
 async function getAllUsers(req, res) {
   try {
     const users = await getAllUsersModel(); // Fetch all users from the database
-    console.log("users", users);
+    // console.log("users", users);
     res.render("manageUsers", { title: "Manage Users", users });
   } catch (error) {
     console.error("Error displaying manage users page:", error);

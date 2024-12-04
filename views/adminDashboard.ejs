@@ -34,7 +34,8 @@
                 <th>Game Name</th>
                 <th>Start Time</th>
                 <th>End Time</th>
-                <th>Status</th>
+                <th>starting Cash</th>
+                <!-- <th>Status</th> -->
               </tr>
             </thead>
             <tbody>
@@ -43,7 +44,8 @@
                 <td><%= g.gameName %></td>
                 <td><%= g.startDateTime.toLocaleString() %></td>
                 <td><%= g.endDateTime.toLocaleString() %></td>
-                <td><%= g.status %></td>
+                <td><%= g.startingCash %></td>
+                <!-- <td><%= g.status %></td> -->
               </tr>
               <% }); %>
             </tbody>
