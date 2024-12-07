@@ -9,7 +9,11 @@ const userRoutes = require("./routes/userRoutes");
 
 const { initializeAdmin } = require("./models/userModel");
 const ejsLayouts = require("express-ejs-layouts");
-const { fetchAllStocks } = require("./controllers/stockController");
+const {
+  fetchAllStocks,
+  buyStock,
+  sellStock,
+} = require("./controllers/stockController");
 const { getAvailableGames, joinGame } = require("./controllers/gameController");
 
 dotenv.config();
@@ -88,6 +92,13 @@ app.use("/stocks", fetchAllStocks);
 app.use("/games", getAvailableGames);
 app.post("/join/game", (req, res) => {
   joinGame(req, res);
+});
+app.post("/buy/stock", (req, res) => {
+  buyStock(req, res);
+});
+app.post("/sell/stock", (req, res) => {
+  console.log(req.body);
+  sellStock(req, res);
 });
 
 module.exports = app;

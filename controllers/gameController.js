@@ -73,8 +73,7 @@ async function joinGame(req, res) {
     const db = getDB();
     const userId = req.session.user?.id;
     const { gameId } = req.body;
-    console.log("user", userId);
-    console.log("gameId", gameId);
+
     // Fetch game details
     const game = await db
       .collection("games")

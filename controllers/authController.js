@@ -1,4 +1,7 @@
 const { getDB } = require("../config/db");
+const crypto = require("crypto");
+const nodemailer = require("nodemailer");
+const { sentOtpModel } = require("../models/authModel");
 
 /**
  * Registers a new user.
@@ -103,4 +106,107 @@ function logoutUser(req, res) {
   });
 }
 
-module.exports = { registerUser, loginUser, logoutUser };
+// Generate and send OTP
+async function sendOtp(email) {
+  const otp = Math.floor(1000 + Math.random() * 9000).toString(); // Generate 4-digit OTP
+
+  // Set up Nodemailer transporter
+  // const transporter = nodemailer.createTransport({
+  //   service: "gmail", // Use Gmail as the email provider
+  //   auth: {
+  //     user: "ariful00892@gmail.com", // Replace with your Gmail address
+  //     pass: "yiuh sagk rndf bjxe", // Replace with the generated App Password
+  //   },
+  // });
+
+  // const mailOptions = {
+  //   from: "ariful00892@gmail.com",
+  //   to: email,
+  //   subject: "Stock Simultation: OTP Code",
+  //   text: `Your OTP code is: ${otp}`,
+  // };
+
+  // return new Promise((resolve, reject) => {
+  //   transporter.sendMail(mailOptions, (err, info) => {
+  //     if (err) {
+  //       console.error("Error sending OTP:", err.message);
+  //       return reject(err); // Reject the promise on error
+  //     }
+  //     // console.log("OTP sent:", info.response);
+  //     resolve(otp); // Resolve with the OTP
+  //   });
+  // });
+
+  const result = await sentOtpModel(email, otp);
+  return otp;
+}
+
+async function verifyOtp(req, res) {
+  const { otp } = req.body;
+
+  // Retrieve OTP and email from session
+  const sessionOtp = req.session.otp;
+  const sessionEmail = req.session.email;
+
+  if (!sessionOtp || !sessionEmail) {
+    return res
+      .status(400)
+      .json({ error: "Session expired. Please try again." });
+  }
+
+  if (otp == sessionOtp) {
+    // Clear OTP from session after successful verification
+    delete req.session.otp;
+
+    return res.status(200).json({
+      message: "OTP verified successfully. Proceed to reset your password.",
+    });
+  } else {
+    return res.status(401).json({ error: "Invalid OTP. Please try again." });
+  }
+}
+
+async function resetPassword(req, res) {
+  const { password } = req.body; // Get passwords from request body
+  const email = req.session.email; // Retrieve email from session
+
+  if (!email) {
+    return res
+      .status(400)
+      .json({ error: "Session expired. Please try again." });
+  }
+
+  try {
+    const db = getDB(); // Get database connection
+
+    // Update the user's password in the database
+    const updatedUser = await db.collection("users").findOneAndUpdate(
+      { email },
+      { $set: { password } }, // Directly set the new password
+      { returnDocument: "after" } // Return the updated document
+    );
+
+    if (updatedUser) {
+      // Clear session data after successful password reset
+      req.session.destroy();
+
+      return res.status(200).json({
+        message: "Password reset successfully. You can now log in.",
+      });
+    } else {
+      return res.status(404).json({ error: "User not found." });
+    }
+  } catch (error) {
+    console.error("Error resetting password:", error.message);
+    return res.status(500).json({ error: "Internal server error." });
+  }
+}
+
+module.exports = {
+  registerUser,
+  loginUser,
+  logoutUser,
+  sendOtp,
+  verifyOtp,
+  resetPassword,
+};

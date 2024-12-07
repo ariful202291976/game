@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="/styles/login.css" />
+
+<div class="login-container">
+  <div class="login-card">
+    <h1>An OTP code sent to your Email</h1>
+    <form action="/auth/verify-otp" method="POST">
+      <div class="form-group">
+        <input
+          type="text"
+          name="otp"
+          placeholder="Enter 4-digit OTP"
+          maxlength="4"
+          required
+        />
+      </div>
+      <button type="submit" class="submit-button">Verify</button>
+    </form>
+  </div>
+  <script src="/js/verifyOtp.js"></script>
+</div>

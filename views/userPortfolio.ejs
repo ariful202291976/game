@@ -31,30 +31,35 @@
         <!-- Stocks Table -->
         <div class="stocks-table">
           <h3>Your Stocks</h3>
-          <% if (user && user.portfolio && user.portfolio.stocks &&
-          user.portfolio.stocks.length > 0) { %>
+          <% if (user && user.stocks && user.stocks.length > 0) { %>
           <table>
             <thead>
               <tr>
-                <th>Stock Name</th>
-                <th>Value</th>
+                <th>Stock Ticker</th>
+                <th>Quantity</th>
+                <th>Unit Price</th>
+                <th>Total Value</th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody>
-              <% user.portfolio.stocks.forEach((stock) => { %>
+              <% user.stocks.forEach((stock) => { %>
               <tr>
-                <td><%= stock.name %></td>
-                <td><%= stock.value %></td>
+                <td><%= stock.ticker %></td>
+                <td><%= stock.quantity %></td>
+                <td>$<%= stock.averagePrice.toFixed(2) %></td>
                 <td>
-                  <form action="/user/sell-stock" method="POST">
-                    <input
-                      type="hidden"
-                      name="stockId"
-                      value="<%= stock._id %>"
-                    />
-                    <button type="submit" class="sell-button">Sell</button>
-                  </form>
+                  $<%= (stock.quantity * stock.averagePrice).toFixed(2) %>
+                </td>
+                <td>
+                  <button
+                    class="sell-button"
+                    data-ticker="<%= stock.ticker %>"
+                    data-quantity="<%= stock.quantity %>"
+                    data-average-price="<%= stock.averagePrice.toFixed(2) %>"
+                  >
+                    Sell
+                  </button>
                 </td>
               </tr>
               <% }); %>
@@ -66,5 +71,32 @@
         </div>
       </div>
     </div>
+
+    <!-- Modal for Selling Stocks -->
+    <div id="sellStockModal" class="modal" style="display: none">
+      <div class="modal-content">
+        <span class="close-button">&times;</span>
+        <h3>Sell Stock</h3>
+        <form id="sellStockForm" action="/user/sell-stock" method="POST">
+          <input type="hidden" name="ticker" id="modalTicker" />
+          <input type="hidden" name="averagePrice" id="modalAveragePrice" />
+          <p>Stock Ticker: <span id="modalStockTicker"></span></p>
+          <p>Total Quantity: <span id="modalStockQuantity"></span></p>
+          <p>Average Price: $<span id="modalStockAveragePrice"></span></p>
+          <label for="sellQuantity">Quantity to Sell:</label>
+          <input
+            type="number"
+            name="quantity"
+            id="sellQuantity"
+            min="1"
+            required
+          />
+          <button type="submit">Confirm Sell</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Include JS -->
+    <script src="/js/sellStockModal.js"></script>
   </body>
 </html>

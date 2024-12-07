@@ -38,7 +38,7 @@
               <tr>
                 <td><%= user.name %></td>
                 <td><%= user.email %></td>
-                <td>$<%= user.portfolio.cash.toFixed(2) %></td>
+                <td>$<%= user.cash.toFixed(2) %></td>
                 <td>
                   <form
                     action="/admin/block-user/<%= user._id %>"

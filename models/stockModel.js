@@ -1,4 +1,6 @@
 const axios = require("axios");
+const { getDB } = require("../config/db");
+const { ObjectId } = require("mongodb");
 
 // const POLYGON_API_KEY = process.env.POLYGON_API_KEY;
 const POLYGON_API_KEY = "eegavq5RrAwcZEvx4E__WGfRTMT7jOcc";
@@ -46,7 +48,7 @@ async function getStockPrice(ticker) {
       }
     );
 
-    console.log(`API response for ${ticker}:`, response.data);
+    // console.log(`API response for ${ticker}:`, response.data);
 
     if (
       response.data &&
@@ -120,8 +122,147 @@ async function getAllStocksWithPrices() {
 //   }
 // }
 
+/**
+ * Updates the user's cash balance.
+ * @param {string} userId - The ID of the user.
+ * @param {number} amount - The amount to add/subtract from the user's cash.
+ * @returns {Promise<Object|null>} - The updated user document or null if not found.
+ */
+async function updateCash(userId, amount) {
+  const db = getDB();
+  const result = await db
+    .collection("users")
+    .findOneAndUpdate(
+      { _id: new ObjectId(userId) },
+      { $inc: { cash: amount } },
+      { returnOriginal: false }
+    );
+  return result.value;
+}
+
+/**
+ * Adds or updates a stock in the user's portfolio.
+ * @param {string} userId - The ID of the user.
+ * @param {string} ticker - The stock ticker.
+ * @param {number} quantity - The quantity of stocks to add.
+ * @param {number} price - The price at which the stocks were purchased.
+ * @returns {Promise<Object|null>} - The updated user document or null if not found.
+ */
+async function addOrUpdateStockModel(userId, ticker, price, quantity) {
+  const db = getDB();
+  const totalPrice = price * quantity;
+  // console.log("Total Price:", totalPrice);
+
+  // Fetch the user document
+  const user = await db
+    .collection("users")
+    .findOne({ _id: new ObjectId(userId) });
+  if (!user) throw new Error("User not found");
+
+  // Check if the user has enough cash
+  if (user.cash < totalPrice) {
+    throw new Error("Insufficient funds to complete the purchase");
+  }
+
+  // Deduct the total price from the user's cash
+  const updatedCash = user.cash - totalPrice;
+
+  // Check if the stock already exists in the user's portfolio
+  const stockIndex = user.stocks?.findIndex((stock) => stock.ticker === ticker);
+
+  if (stockIndex >= 0) {
+    // Update existing stock
+    const existingStock = user.stocks[stockIndex];
+    const totalQuantity = existingStock.quantity + quantity;
+    const newAveragePrice =
+      (existingStock.averagePrice * existingStock.quantity + price * quantity) /
+      totalQuantity;
+
+    user.stocks[stockIndex].quantity = totalQuantity;
+    user.stocks[stockIndex].averagePrice = newAveragePrice;
+    user.stocks[stockIndex].status = true;
+  } else {
+    // Add new stock to the portfolio
+    if (!user.stocks) user.stocks = [];
+    user.stocks.push({
+      ticker,
+      quantity,
+      averagePrice: price,
+    });
+  }
+
+  // Update the user's document in the database
+  const result = await db.collection("users").findOneAndUpdate(
+    { _id: new ObjectId(userId) },
+    {
+      $set: {
+        stocks: user.stocks,
+        cash: updatedCash, // Update user's cash
+      },
+    },
+    { returnOriginal: false }
+  );
+
+  return result.value;
+}
+
+// Function to process selling stock from user's portfolio
+async function processSellStockModel(userId, ticker, quantityToSell) {
+  const db = getDB();
+
+  // Fetch user data from DB
+  const user = await db
+    .collection("users")
+    .findOne({ _id: new ObjectId(userId) });
+  if (!user) throw new Error("User not found");
+
+  // Fetch the updated stock price
+  const updatedPrice = await getStockPrice(ticker);
+  console.log("updatedPrice", updatedPrice);
+  if (!updatedPrice) throw new Error("Unable to fetch updated stock price");
+
+  // Find the stock in the user's portfolio
+  const stockIndex = user.stocks.findIndex((stock) => stock.ticker === ticker);
+  if (stockIndex === -1) throw new Error("Stock not found in portfolio");
+
+  const stock = user.stocks[stockIndex];
+  if (stock.quantity < quantityToSell) {
+    throw new Error("Not enough stock to sell");
+  }
+
+  // Calculate the total sale amount
+  const totalSaleAmount = updatedPrice * quantityToSell;
+
+  // Update stock quantity in portfolio
+  stock.quantity -= quantityToSell;
+
+  // Remove stock if quantity reaches zero
+  if (stock.quantity === 0) {
+    user.stocks.splice(stockIndex, 1);
+  }
+
+  // Update user's cash balance by adding the sale amount
+  user.cash += totalSaleAmount;
+
+  // Update the user's document in the database
+  const updatedUser = await db.collection("users").findOneAndUpdate(
+    { _id: new ObjectId(userId) },
+    {
+      $set: {
+        stocks: user.stocks,
+        cash: user.cash, // Update user's cash
+      },
+    },
+    { returnOriginal: false }
+  );
+
+  return updatedUser.value; // Return the updated user document
+}
+
 module.exports = {
   getStockPrice,
   getAllStocks,
   getAllStocksWithPrices,
+  addOrUpdateStockModel,
+  processSellStockModel,
 };

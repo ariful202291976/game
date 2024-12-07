@@ -39,7 +39,7 @@ async function getUserPortfolio(req, res) {
 
   try {
     const user = await getUserProfileModel(userId);
-
+    // console.log("user", user);
     if (!user) {
       return res.status(404).send("User not found");
     }
