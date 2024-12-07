@@ -141,9 +141,69 @@ async function joinGame(req, res) {
   }
 }
 
+async function getGames(req, res) {
+  const db = getDB();
+
+  try {
+    // Fetch all games
+    const games = await db.collection("games").find({}).toArray();
+
+    // Render the game selection page
+    res.render("gameSelection", { games });
+  } catch (error) {
+    console.error("Error fetching games:", error.message);
+    res.status(500).send("Internal server error");
+  }
+}
+
+async function getLeaderboard(req, res) {
+  const { gameId } = req.query; // Get gameId from query string
+
+  if (!gameId) {
+    return res.status(400).send("Game ID is required.");
+  }
+
+  try {
+    const db = getDB();
+
+    // Fetch participants and join with users collection
+    const participants = await db
+      .collection("gameParticipants")
+      .aggregate([
+        { $match: { gameId: new ObjectId(gameId) } },
+        {
+          $lookup: {
+            from: "users",
+            localField: "userId",
+            foreignField: "_id",
+            as: "userDetails",
+          },
+        },
+        { $unwind: "$userDetails" },
+        {
+          $project: {
+            _id: 0,
+            name: "$userDetails.name",
+            email: "$userDetails.email",
+            cash: "$userDetails.cash",
+          },
+        },
+        { $sort: { cash: -1 } },
+      ])
+      .toArray();
+
+    res.render("leaderboard", { participants, gameId });
+  } catch (error) {
+    console.error("Error fetching leaderboard:", error.message);
+    res.status(500).send("Internal server error");
+  }
+}
+
 module.exports = {
   createNewGame,
   getAllOngoingGames,
   getAvailableGames,
   joinGame,
+  getGames,
+  getLeaderboard,
 };

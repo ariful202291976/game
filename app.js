@@ -14,7 +14,12 @@ const {
   buyStock,
   sellStock,
 } = require("./controllers/stockController");
-const { getAvailableGames, joinGame } = require("./controllers/gameController");
+const {
+  getAvailableGames,
+  joinGame,
+  getGames,
+  getLeaderboard,
+} = require("./controllers/gameController");
 
 dotenv.config();
 connectDB();
@@ -99,6 +104,15 @@ app.post("/buy/stock", (req, res) => {
 app.post("/sell/stock", (req, res) => {
   console.log(req.body);
   sellStock(req, res);
+});
+
+app.get("/leaderboard", (req, res) => {
+  console.log(req.body);
+  getGames(req, res);
+});
+app.get("/leaderboard/results", (req, res) => {
+  console.log(req.body);
+  getLeaderboard(req, res);
 });
 
 module.exports = app;

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title></title>
+    <link rel="stylesheet" href="/styles/adminDashboard.css" />
+  </head>
+  <body>
+    <div class="admin-dashboard-container">
+      <!-- Sidebar  -->
+      <aside class="sidebar">
+        <ul>
+          <li><a href="/user/portfolio">Portfolio</a></li>
+          <li><a href="/games">Join Games</a></li>
+          <li><a href="/leaderboard">Leaderboard</a></li>
+          <li><a href="/user/profile">Profile</a></li>
+        </ul>
+      </aside>
+
+      <!-- Main content area -->
+      <div class="main-content">
+        <div class="game-selection-container">
+          <h1>Select a Game</h1>
+          <form action="/leaderboard/results" method="GET">
+            <div class="form-group">
+              <label for="gameId">Choose a game:</label>
+              <select name="gameId" id="gameId" required>
+                <% if (games.length > 0) { %> <% games.forEach(game => { %>
+                <option value="<%= game._id %>"><%= game.gameName %></option>
+                <% }); %> <% } else { %>
+                <option disabled>No games available</option>
+                <% } %>
+              </select>
+            </div>
+            <button type="submit" class="submit-button">
+              View Leaderboard
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
