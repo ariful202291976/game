@@ -1,6 +1,9 @@
 // controllers/adminController.js
 const { getDB } = require("../config/db");
-const { getAllUsersModel } = require("../models/userModel");
+const {
+  getAllUsersModel,
+  toggleUserStatusModel,
+} = require("../models/userModel");
 
 /**
  * Retrieves statistics and the current game for the admin dashboard.
@@ -40,4 +43,20 @@ async function getAllUsers(req, res) {
   }
 }
 
-module.exports = { getAdminDashboardStats, getAllUsers };
+async function toggleUserStatus(req, res) {
+  const userId = req.params.userId;
+  console.log("id", userId);
+  try {
+    // Call the model function to update the user's status
+    const result = await toggleUserStatusModel(userId);
+    if (result.modifiedCount > 0) {
+      console.log(`User status updated for userId: ${userId}`);
+    }
+    res.redirect("/admin/users"); // Redirect back to the Manage Users page
+  } catch (error) {
+    console.error("Error toggling user status:", error);
+    res.status(500).send("Internal Server Error");
+  }
+}
+
+module.exports = { getAdminDashboardStats, getAllUsers, toggleUserStatus };

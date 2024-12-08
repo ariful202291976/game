@@ -48,6 +48,7 @@
                 <th>Quantity</th>
                 <th>Unit Price</th>
                 <th>Total Value</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -59,6 +60,16 @@
                 <td>
                   $<%= (stock.quantity * stock.averagePrice).toFixed(2) %>
                 </td>
+                <td>
+                  <button
+                    class="sell-button"
+                    data-ticker="<%= stock.ticker %>"
+                    data-quantity="<%= stock.quantity %>"
+                    data-average-price="<%= stock.averagePrice.toFixed(2) %>"
+                  >
+                    Sell
+                  </button>
+                </td>
               </tr>
               <% }); %>
             </tbody>
@@ -67,6 +78,30 @@
           <p>You don't own any stocks yet.</p>
           <% } %>
         </div>
+      </div>
+    </div>
+
+    <!-- Modal for Selling Stocks -->
+    <div id="sellStockModal" class="modal" style="display: none">
+      <div class="modal-content">
+        <span class="close-button">&times;</span>
+        <h3>Sell Stock</h3>
+        <form id="sellStockForm" action="/user/sell-stock" method="POST">
+          <input type="hidden" name="ticker" id="modalTicker" />
+          <input type="hidden" name="averagePrice" id="modalAveragePrice" />
+          <p>Stock Ticker: <span id="modalStockTicker"></span></p>
+          <p>Total Quantity: <span id="modalStockQuantity"></span></p>
+          <p>Average Price: $<span id="modalStockAveragePrice"></span></p>
+          <label for="sellQuantity">Quantity to Sell:</label>
+          <input
+            type="number"
+            name="quantity"
+            id="sellQuantity"
+            min="1"
+            required
+          />
+          <button type="submit">Confirm Sell</button>
+        </form>
       </div>
     </div>
 
@@ -118,5 +153,7 @@
         });
       <% } %>
     </script>
+    <!-- Include JS -->
+    <script src="/js/sellStockModal.js"></script>
   </body>
 </html>

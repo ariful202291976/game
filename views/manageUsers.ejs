@@ -14,7 +14,7 @@
           <li><a href="/admin/dashboard">Dashboard</a></li>
           <li><a href="/admin/users">Manage Users</a></li>
           <li><a href="/admin/stocks">Manage Stocks</a></li>
-          <li><a href="/admin/leaderboard">Leaderboard</a></li>
+          <li><a href="/leaderboard">Leaderboard</a></li>
         </ul>
       </aside>
 
@@ -41,10 +41,16 @@
                 <td>$<%= user.cash.toFixed(2) %></td>
                 <td>
                   <form
-                    action="/admin/block-user/<%= user._id %>"
+                    action="/admin/toggle-user-status/<%= user._id %>"
                     method="POST"
                   >
+                    <% if (user?.status) { %>
                     <button type="submit" class="block-button">Block</button>
+                    <% } else { %>
+                    <button type="submit" class="unblock-button">
+                      Unblock
+                    </button>
+                    <% } %>
                   </form>
                 </td>
               </tr>

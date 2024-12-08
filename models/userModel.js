@@ -148,6 +148,34 @@ async function getAllUsersModel() {
   }
 }
 
+async function toggleUserStatusModel(userId) {
+  const db = getDB();
+  try {
+    const user = await db
+      .collection("users")
+      .findOne({ _id: new ObjectId(userId) });
+    // console.log(user);
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    // Toggle the status field
+    const newStatus = !user.status;
+
+    console.log(`Current status: ${user.status}, New status: ${newStatus}`);
+
+    return await db
+      .collection("users")
+      .updateOne(
+        { _id: new ObjectId(userId) },
+        { $set: { status: newStatus } }
+      );
+  } catch (error) {
+    console.error("Error toggling user status:", error);
+    throw error;
+  }
+}
+
 module.exports = {
   validateUser,
   insertUser,
@@ -155,4 +183,5 @@ module.exports = {
   getUserProfileModel,
   getUserPortfolioModel,
   getAllUsersModel,
+  toggleUserStatusModel,
 };

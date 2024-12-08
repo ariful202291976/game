@@ -1,7 +1,10 @@
 const express = require("express");
 const { getAllOngoingGames } = require("../controllers/gameController");
 const { createNewGame } = require("../controllers/gameController");
-const { getAllUsers } = require("../controllers/adminController");
+const {
+  getAllUsers,
+  toggleUserStatus,
+} = require("../controllers/adminController");
 const router = express.Router();
 
 /**
@@ -76,5 +79,17 @@ router.post("/create-game", ensureAdmin, async (req, res) => {
   // Redirect to the admin dashboard or another page after creating the game
   // res.redirect("/admin/dashboard");
 });
+
+// Route to toggle user status
+router.post("/toggle-user-status/:userId", ensureAdmin, toggleUserStatus);
+
+// router.post("/toggle-user-status/:userId", ensureAdmin, async (req, res) => {
+//   try {
+//     await toggleUserStatus(req, res);
+//   } catch (error) {
+//     console.error("Error:", error.message);
+//     res.status(500).send("An error occurred");
+//   }
+// });
 
 module.exports = router;
