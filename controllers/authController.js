@@ -32,7 +32,7 @@ async function registerUser(req, res) {
       email,
       password,
       role: "user", // Default role
-      // portfolio: { cash: 0 }, // Starting cash for players
+      status: true,
       cash: 0,
       createdAt: new Date(),
     };

@@ -24,10 +24,12 @@
         <h2>Welcome, <%= user ? user.name : "User" %>!</h2>
 
         <!-- Graphical Representation -->
+        <% if (user && user.cash > 0) { %>
         <div class="cash-chart-container">
           <h3>Portfolio Overview</h3>
           <canvas id="cashChart" width="400" height="400"></canvas>
         </div>
+        <% } %>
 
         <!-- Cash Balance -->
         <div class="cash-balance">
@@ -70,48 +72,51 @@
 
     <!-- Chart.js Script -->
     <script>
-      // Data for the chart
-      const cash = <%= user && user.cash ? user.cash : 0 %>; // User's cash balance
-      const totalStockValue = <%= user && user.stocks
-        ? user.stocks.reduce((sum, stock) => sum + stock.quantity * stock.averagePrice, 0)
-        : 0 %>; // Total value of stocks
-      const totalPortfolioValue = cash + totalStockValue;
+      <% if (user && user.cash > 0) { %>
+        // Data for the chart
+        const cash = <%= user.cash %>; // User's cash balance
+        const totalStockValue = <%= user && user.stocks
+          ? user.stocks.reduce((sum, stock) => sum + stock.quantity * stock.averagePrice, 0)
+          : 0 %>; // Total value of stocks
+        const totalPortfolioValue = cash + totalStockValue;
 
-      // Create the doughnut chart
-      const ctx = document.getElementById("cashChart").getContext("2d");
-      new Chart(ctx, {
-        type: "doughnut",
-        data: {
-          labels: ["Cash", "Stocks"],
-          datasets: [
-            {
-              data: [cash, totalStockValue],
-              backgroundColor: ["#36A2EB", "#FF6384"],
-              hoverBackgroundColor: ["#63B4EE", "#FF8394"],
-            },
-          ],
-        },
-        options: {
-          responsive: true,
-          plugins: {
-            legend: {
-              position: "bottom",
-            },
-            tooltip: {
-              callbacks: {
-                label: function (context) {
-                  const label = context.label || "";
-                  const value = context.raw || 0;
-                  const percentage = ((value / totalPortfolioValue) * 100).toFixed(
-                    2
-                  );
-                  return `${label}: $${value.toFixed(2)} (${percentage}%)`;
+        // Create the doughnut chart
+        const ctx = document.getElementById("cashChart").getContext("2d");
+        new Chart(ctx, {
+          type: "doughnut",
+          data: {
+            labels: ["Cash", "Stocks"],
+            datasets: [
+              {
+                data: [cash, totalStockValue],
+                backgroundColor: ["#36A2EB", "#FF6384"],
+                hoverBackgroundColor: ["#63B4EE", "#FF8394"],
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: {
+                position: "bottom",
+              },
+              tooltip: {
+                callbacks: {
+                  label: function (context) {
+                    const label = context.label || "";
+                    const value = context.raw || 0;
+                    const percentage = (
+                      (value / totalPortfolioValue) *
+                      100
+                    ).toFixed(2);
+                    return `${label}: $${value.toFixed(2)} (${percentage}%)`;
+                  },
                 },
               },
             },
           },
-        },
-      });
+        });
+      <% } %>
     </script>
   </body>
 </html>
