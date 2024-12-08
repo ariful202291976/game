@@ -75,9 +75,6 @@ router.post("/create-game", ensureAdmin, async (req, res) => {
     console.error("Error:", error.message);
     res.status(500).send("An error occurred during game creation.");
   }
-
-  // Redirect to the admin dashboard or another page after creating the game
-  // res.redirect("/admin/dashboard");
 });
 
 // Route to toggle user status

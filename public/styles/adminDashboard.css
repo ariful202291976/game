@@ -462,3 +462,20 @@ canvas {
   max-width: 400px;
   margin: 0 auto;
 }
+
+/* block user */
+.block-button {
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  padding: 5px 5px;
+  cursor: pointer;
+}
+
+.unblock-button {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 5px 5px;
+  cursor: pointer;
+}
