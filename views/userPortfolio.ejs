@@ -1,4 +1,3 @@
-<!-- views/adminDashboard.ejs -->
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -6,10 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title><%= title %></title>
     <link rel="stylesheet" href="/styles/adminDashboard.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </head>
   <body>
     <div class="admin-dashboard-container">
-      <!-- Sidebar  -->
+      <!-- Sidebar -->
       <aside class="sidebar">
         <ul>
           <li><a href="/user/portfolio">Portfolio</a></li>
@@ -19,13 +19,20 @@
         </ul>
       </aside>
 
+      <!-- Main Content -->
       <div class="main-content">
         <h2>Welcome, <%= user ? user.name : "User" %>!</h2>
+
+        <!-- Graphical Representation -->
+        <div class="cash-chart-container">
+          <h3>Portfolio Overview</h3>
+          <canvas id="cashChart" width="400" height="400"></canvas>
+        </div>
 
         <!-- Cash Balance -->
         <div class="cash-balance">
           <h3>Your Cash Balance</h3>
-          <p>$<%= user && user ? user.cash.toFixed(2) : 0.00 %></p>
+          <p>$<%= user && user.cash ? user.cash.toFixed(2) : "0.00" %></p>
         </div>
 
         <!-- Stocks Table -->
@@ -39,7 +46,6 @@
                 <th>Quantity</th>
                 <th>Unit Price</th>
                 <th>Total Value</th>
-                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -50,16 +56,6 @@
                 <td>$<%= stock.averagePrice.toFixed(2) %></td>
                 <td>
                   $<%= (stock.quantity * stock.averagePrice).toFixed(2) %>
-                </td>
-                <td>
-                  <button
-                    class="sell-button"
-                    data-ticker="<%= stock.ticker %>"
-                    data-quantity="<%= stock.quantity %>"
-                    data-average-price="<%= stock.averagePrice.toFixed(2) %>"
-                  >
-                    Sell
-                  </button>
                 </td>
               </tr>
               <% }); %>
@@ -72,31 +68,50 @@
       </div>
     </div>
 
-    <!-- Modal for Selling Stocks -->
-    <div id="sellStockModal" class="modal" style="display: none">
-      <div class="modal-content">
-        <span class="close-button">&times;</span>
-        <h3>Sell Stock</h3>
-        <form id="sellStockForm" action="/user/sell-stock" method="POST">
-          <input type="hidden" name="ticker" id="modalTicker" />
-          <input type="hidden" name="averagePrice" id="modalAveragePrice" />
-          <p>Stock Ticker: <span id="modalStockTicker"></span></p>
-          <p>Total Quantity: <span id="modalStockQuantity"></span></p>
-          <p>Average Price: $<span id="modalStockAveragePrice"></span></p>
-          <label for="sellQuantity">Quantity to Sell:</label>
-          <input
-            type="number"
-            name="quantity"
-            id="sellQuantity"
-            min="1"
-            required
-          />
-          <button type="submit">Confirm Sell</button>
-        </form>
-      </div>
-    </div>
+    <!-- Chart.js Script -->
+    <script>
+      // Data for the chart
+      const cash = <%= user && user.cash ? user.cash : 0 %>; // User's cash balance
+      const totalStockValue = <%= user && user.stocks
+        ? user.stocks.reduce((sum, stock) => sum + stock.quantity * stock.averagePrice, 0)
+        : 0 %>; // Total value of stocks
+      const totalPortfolioValue = cash + totalStockValue;
 
-    <!-- Include JS -->
-    <script src="/js/sellStockModal.js"></script>
+      // Create the doughnut chart
+      const ctx = document.getElementById("cashChart").getContext("2d");
+      new Chart(ctx, {
+        type: "doughnut",
+        data: {
+          labels: ["Cash", "Stocks"],
+          datasets: [
+            {
+              data: [cash, totalStockValue],
+              backgroundColor: ["#36A2EB", "#FF6384"],
+              hoverBackgroundColor: ["#63B4EE", "#FF8394"],
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              position: "bottom",
+            },
+            tooltip: {
+              callbacks: {
+                label: function (context) {
+                  const label = context.label || "";
+                  const value = context.raw || 0;
+                  const percentage = ((value / totalPortfolioValue) * 100).toFixed(
+                    2
+                  );
+                  return `${label}: $${value.toFixed(2)} (${percentage}%)`;
+                },
+              },
+            },
+          },
+        },
+      });
+    </script>
   </body>
 </html>
