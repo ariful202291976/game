@@ -11,10 +11,17 @@
       <!-- Sidebar  -->
       <aside class="sidebar">
         <ul>
+          <% if (role === "admin") { %>
+          <li><a href="/admin/dashboard">Dashboard</a></li>
+          <li><a href="/admin/users">Manage Users</a></li>
+          <li><a href="/admin/stocks">Manage Stocks</a></li>
+          <li><a href="/leaderboard">Leaderboard</a></li>
+          <% } else if (role === "user") { %>
           <li><a href="/user/portfolio">Portfolio</a></li>
           <li><a href="/games">Join Games</a></li>
           <li><a href="/leaderboard">Leaderboard</a></li>
           <li><a href="/user/profile">Profile</a></li>
+          <% } %>
         </ul>
       </aside>
 

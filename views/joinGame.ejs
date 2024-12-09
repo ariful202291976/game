@@ -5,6 +5,57 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dashboard - Available Games</title>
     <link rel="stylesheet" href="/styles/adminDashboard.css" />
+    <script>
+      // Function to update the countdown timer for each game
+      function updateCountdown(gameId, startDateTime, endDateTime) {
+        const currentTime = new Date().getTime();
+        const startTime = new Date(startDateTime).getTime();
+        const endTime = new Date(endDateTime).getTime();
+
+        // Calculate the remaining time to the start of the game
+        const remainingTime = startTime - currentTime;
+        const remainingEndTime = endTime - currentTime;
+
+        // Handle the countdown and display appropriate messages
+        if (remainingTime > 0) {
+          // If the game has not started yet, show the countdown timer
+          const hours = Math.floor(remainingTime / (1000 * 60 * 60));
+          const minutes = Math.floor(
+            (remainingTime % (1000 * 60 * 60)) / (1000 * 60)
+          );
+          const seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
+          document.getElementById(`countdown-${gameId}`).innerHTML = `${hours
+            .toString()
+            .padStart(2, "0")}:${minutes.toString().padStart(2, "0")}:${seconds
+            .toString()
+            .padStart(2, "0")}`;
+        } else if (remainingEndTime > 0) {
+          // If the game has started but is still ongoing, show the remaining time to the end
+          const hours = Math.floor(remainingEndTime / (1000 * 60 * 60));
+          const minutes = Math.floor(
+            (remainingEndTime % (1000 * 60 * 60)) / (1000 * 60)
+          );
+          const seconds = Math.floor((remainingEndTime % (1000 * 60)) / 1000);
+          document.getElementById(`countdown-${gameId}`).innerHTML = `${hours
+            .toString()
+            .padStart(2, "0")}:${minutes.toString().padStart(2, "0")}:${seconds
+            .toString()
+            .padStart(2, "0")}`;
+        } else {
+          // If the game has ended, display "Game Ended!" and hide the join button
+          document.getElementById(`countdown-${gameId}`).innerHTML =
+            "Game Ended!";
+          document.getElementById(`join-button-${gameId}`).style.display =
+            "none"; // Hide the button
+        }
+
+        // Continue updating the countdown every second
+        setTimeout(
+          () => updateCountdown(gameId, startDateTime, endDateTime),
+          1000
+        );
+      }
+    </script>
   </head>
   <body>
     <div class="admin-dashboard-container">
@@ -31,16 +82,17 @@
                 <th>Game Name</th>
                 <th>Start Time</th>
                 <th>End Time</th>
+                <th>Remaining Time</th>
                 <th>Action</th>
               </tr>
             </thead>
             <tbody>
-              <% games.forEach((game) => { %> <% if (game.status === "True") {
-              %>
+              <% games.forEach((game) => { %> <% if (game.status == true) { %>
               <tr>
                 <td><%= game.gameName %></td>
                 <td><%= new Date(game.startDateTime).toLocaleString() %></td>
                 <td><%= new Date(game.endDateTime).toLocaleString() %></td>
+                <td id="countdown-<%= game._id %>"></td>
                 <td>
                   <form action="/join/game" method="POST">
                     <input
@@ -48,10 +100,24 @@
                       name="gameId"
                       value="<%= game._id %>"
                     />
-                    <button type="submit" class="join-button">Join</button>
+                    <button
+                      type="submit"
+                      class="join-button"
+                      id="join-button-<%= game._id %>"
+                    >
+                      Join
+                    </button>
                   </form>
                 </td>
               </tr>
+              <script>
+                // Initialize countdown for each game
+                updateCountdown(
+                  "<%= game._id %>",
+                  "<%= game.startDateTime %>",
+                  "<%= game.endDateTime %>"
+                );
+              </script>
               <% } %> <% }); %>
             </tbody>
           </table>

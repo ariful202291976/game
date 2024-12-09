@@ -20,24 +20,23 @@
 
       <!-- Main content area -->
       <div class="main-content">
-        <h2>Welcome, <%= user.name %>!</h2>
+        <h2>Your Profile</h2>
 
         <!-- Profile Information -->
         <div class="profile-info">
-          <h3>Your Profile</h3>
           <p><strong>Name:</strong> <%= user.name %></p>
           <p><strong>Email:</strong> <%= user.email %></p>
           <p><strong>Cash Balance:</strong> $<%= user.cash.toFixed(2) %></p>
-          <form action="/user/reset-password" method="POST">
+          <!-- <form action="/user/reset-password" method="POST">
             <button class="reset-button" type="submit">Reset Password</button>
-          </form>
+          </form> -->
         </div>
 
         <!-- Marketplace Section -->
         <div class="marketplace-section">
           <h3>Marketplace</h3>
-          <p>Explore and buy new stocks in the marketplace.</p>
-          <a href="/stocks" class="create-game-button">Go to Marketplace</a>
+          <p>Explore and buy new stocks in the marketplace?</p>
+          <a href="/games" class="create-game-button">Join Game</a>
         </div>
       </div>
     </div>

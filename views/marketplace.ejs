@@ -13,7 +13,7 @@
         <ul>
           <li><a href="/user/portfolio">Portfolio</a></li>
           <li><a href="/games">Join Games</a></li>
-          <li><a href="/admin/leaderboard">Leaderboard</a></li>
+          <li><a href="/leaderboard">Leaderboard</a></li>
           <li><a href="/user/profile">Profile</a></li>
         </ul>
       </aside>
@@ -22,11 +22,17 @@
       <div class="main-content">
         <h2>Marketplace</h2>
 
+        <!-- Stock Search Section -->
+        <div class="search-container">
+          <input type="text" id="stockSearch" placeholder="Search for a stock..." />
+          <button id="searchButton">Search</button>
+        </div>
+
         <!-- Display the stocks as cards -->
-        <div class="stock-cards-container">
+        <div class="stock-cards-container" id="stockCardsContainer">
           <% if (stocks && stocks.length > 0) { %>
           <% stocks.forEach(stock => { %>
-          <div class="stock-card">
+          <div class="stock-card" data-name="<%= stock.name %>">
             <h3><%= stock.name %> (<%= stock.ticker %>)</h3>
             <p><strong>Exchange:</strong> <%= stock.primary_exchange %></p>
             <p><strong>Type:</strong> <%= stock.type %></p>
@@ -77,5 +83,23 @@
     </div>
 
     <script src="/js/modal.js"></script>
+    <script>
+      // JavaScript to filter stock cards based on the input text
+      document.getElementById('searchButton').addEventListener('click', function() {
+        const searchQuery = document.getElementById('stockSearch').value.toLowerCase();
+        const stockCards = document.querySelectorAll('.stock-card');
+        
+        stockCards.forEach(card => {
+          const stockName = card.getAttribute('data-name').toLowerCase();
+          
+          // Show or hide the card based on whether it matches the search query
+          if (stockName.includes(searchQuery)) {
+            card.style.display = 'block'; // Show the stock card
+          } else {
+            card.style.display = 'none'; // Hide the stock card
+          }
+        });
+      });
+    </script>
   </body>
 </html>

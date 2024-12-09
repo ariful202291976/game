@@ -15,7 +15,7 @@
           <li><a href="/admin/dashboard">Dashboard</a></li>
           <li><a href="/admin/users">Manage Users</a></li>
           <li><a href="/admin/stocks">Manage Stocks</a></li>
-          <li><a href="/admin/leaderboard">Leaderboard</a></li>
+          <li><a href="/leaderboard">Leaderboard</a></li>
         </ul>
       </aside>
 
@@ -24,12 +24,12 @@
         <h2>Welcome to the Admin Dashboard!</h2>
 
         <!-- Game section -->
-        <div class="game-section table-container">
+        <div>
           <h3>Ongoing Games</h3>
 
           <% if (game && game.length > 0) { %>
-          <div>
-            <table class="">
+          <div class="game-section">
+            <table>
               <thead>
                 <tr>
                   <th>Game Name</th>
@@ -51,11 +51,6 @@
                 <% }); %>
               </tbody>
             </table>
-            <a href="/leaderboard">
-              <button type="submit" class="create-game-button">
-                View Leaderboard
-              </button>
-            </a>
           </div>
           <% } else { %>
           <p>No ongoing games currently.</p>

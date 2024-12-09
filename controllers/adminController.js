@@ -45,7 +45,7 @@ async function getAllUsers(req, res) {
 
 async function toggleUserStatus(req, res) {
   const userId = req.params.userId;
-  console.log("id", userId);
+  // console.log("id", userId);
   try {
     // Call the model function to update the user's status
     const result = await toggleUserStatusModel(userId);

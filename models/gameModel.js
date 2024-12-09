@@ -30,7 +30,14 @@ async function findGameById(gameId) {
  */
 async function getOngoingGamesModel() {
   const db = getDB();
-  return await db.collection("games").find({ status: "True" }).toArray();
+  const currentTime = new Date();
+  return await db
+    .collection("games")
+    .find({
+      status: true,
+      endDateTime: { $gte: currentTime }, // Only fetch games with endDateTime >= current time
+    })
+    .toArray();
 }
 
 /**
@@ -41,11 +48,14 @@ async function getOngoingGamesModel() {
 async function fetchActiveGames() {
   try {
     const db = getDB();
-    const games = await db
+    const currentTime = new Date();
+    return await db
       .collection("games")
-      .find({ status: "True" })
+      .find({
+        status: true,
+        endDateTime: { $gte: currentTime }, // Only fetch games with endDateTime >= current time
+      })
       .toArray();
-    return games;
   } catch (error) {
     console.error("Error fetching active games from the database:", error);
     throw error; // Pass the error back to the controller

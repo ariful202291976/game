@@ -5,6 +5,7 @@ const {
   getAllUsers,
   toggleUserStatus,
 } = require("../controllers/adminController");
+const { manageStocks } = require("../controllers/stockController");
 const router = express.Router();
 
 /**
@@ -51,8 +52,13 @@ router.get("/users", ensureAdmin, async (req, res) => {
 });
 
 // Manage Stocks page content
-router.get("/stocks", ensureAdmin, (req, res) => {
-  res.render("manageStocks", { title: "Manage Stocks" });
+router.get("/stocks", ensureAdmin, async (req, res) => {
+  try {
+    await manageStocks(req, res);
+  } catch (error) {
+    console.error("Error fetching stocks:", error);
+    res.status(500).send("Internal Server Error");
+  }
 });
 
 // Leaderboard page content
@@ -79,14 +85,5 @@ router.post("/create-game", ensureAdmin, async (req, res) => {
 
 // Route to toggle user status
 router.post("/toggle-user-status/:userId", ensureAdmin, toggleUserStatus);
-
-// router.post("/toggle-user-status/:userId", ensureAdmin, async (req, res) => {
-//   try {
-//     await toggleUserStatus(req, res);
-//   } catch (error) {
-//     console.error("Error:", error.message);
-//     res.status(500).send("An error occurred");
-//   }
-// });
 
 module.exports = router;

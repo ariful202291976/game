@@ -14,7 +14,7 @@ const createNewGame = async (req, res) => {
     startDateTime: new Date(startDateTime),
     endDateTime: new Date(endDateTime),
     startingCash: parseInt(startingCash, 10),
-    status: "True", // Default status
+    status: true, // Default status
   };
 
   // Set a toast message for success
@@ -55,6 +55,7 @@ const getAllOngoingGames = async (req, res) => {
 async function getAvailableGames(req, res) {
   try {
     const games = await fetchActiveGames(); // Call the model function
+    console.log(games);
     res.render("joinGame", { games });
   } catch (error) {
     console.error("Error fetching available games:", error);
@@ -79,14 +80,6 @@ async function joinGame(req, res) {
       .collection("games")
       .findOne({ _id: new ObjectId(gameId) });
     console.log(game);
-
-    // if (!game) {
-    //   req.session.toast = {
-    //     type: "error",
-    //     message: "Game not found.",
-    //   };
-    //   return res.redirect("/games");
-    // }
 
     // Check if the user has already joined this game
     const existingEntry = await db.collection("gameParticipants").findOne({
@@ -143,13 +136,14 @@ async function joinGame(req, res) {
 
 async function getGames(req, res) {
   const db = getDB();
+  const role = req.session.user?.role;
 
   try {
     // Fetch all games
     const games = await db.collection("games").find({}).toArray();
 
     // Render the game selection page
-    res.render("gameSelection", { games });
+    res.render("gameSelection", { games, role });
   } catch (error) {
     console.error("Error fetching games:", error.message);
     res.status(500).send("Internal server error");
@@ -158,6 +152,7 @@ async function getGames(req, res) {
 
 async function getLeaderboard(req, res) {
   const { gameId } = req.query; // Get gameId from query string
+  const role = req.session.user?.role;
 
   if (!gameId) {
     return res.status(400).send("Game ID is required.");
@@ -192,7 +187,7 @@ async function getLeaderboard(req, res) {
       ])
       .toArray();
 
-    res.render("leaderboard", { participants, gameId });
+    res.render("leaderboard", { participants, gameId, role });
   } catch (error) {
     console.error("Error fetching leaderboard:", error.message);
     res.status(500).send("Internal server error");
