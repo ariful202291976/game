@@ -102,16 +102,13 @@ app.post("/buy/stock", (req, res) => {
   buyStock(req, res);
 });
 app.post("/sell/stock", (req, res) => {
-  console.log(req.body);
   sellStock(req, res);
 });
 
 app.get("/leaderboard", (req, res) => {
-  console.log(req.body);
   getGames(req, res);
 });
 app.get("/leaderboard/results", (req, res) => {
-  console.log(req.body);
   getLeaderboard(req, res);
 });
 

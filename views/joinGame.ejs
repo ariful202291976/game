@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="/styles/adminDashboard.css" />
     <script>
       // Function to update the countdown timer for each game
+      // Function to update the countdown timer for each game
       function updateCountdown(gameId, startDateTime, endDateTime) {
         const currentTime = new Date().getTime();
         const startTime = new Date(startDateTime).getTime();
@@ -42,11 +43,16 @@
             .toString()
             .padStart(2, "0")}`;
         } else {
-          // If the game has ended, display "Game Ended!" and hide the join button
+          // If the game has ended, display "Game Ended!" and replace the join button with a leaderboard button
           document.getElementById(`countdown-${gameId}`).innerHTML =
             "Game Ended!";
-          document.getElementById(`join-button-${gameId}`).style.display =
-            "none"; // Hide the button
+          const actionCell = document.getElementById(`action-cell-${gameId}`);
+          actionCell.innerHTML = `
+       <form action="/leaderboard/results" method="GET">
+    <input type="hidden" name="gameId" value="${gameId}" />
+    <button type="submit" class="leaderboard-button">View Leaderboard</button>
+  </form>
+    `;
         }
 
         // Continue updating the countdown every second
@@ -93,7 +99,7 @@
                 <td><%= new Date(game.startDateTime).toLocaleString() %></td>
                 <td><%= new Date(game.endDateTime).toLocaleString() %></td>
                 <td id="countdown-<%= game._id %>"></td>
-                <td>
+                <td id="action-cell-<%= game._id %>">
                   <form action="/join/game" method="POST">
                     <input
                       type="hidden"

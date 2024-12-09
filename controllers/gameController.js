@@ -79,7 +79,7 @@ async function joinGame(req, res) {
     const game = await db
       .collection("games")
       .findOne({ _id: new ObjectId(gameId) });
-    console.log(game);
+    // console.log(game);
 
     // Check if the user has already joined this game
     const existingEntry = await db.collection("gameParticipants").findOne({
@@ -151,6 +151,7 @@ async function getGames(req, res) {
 }
 
 async function getLeaderboard(req, res) {
+  const db = getDB();
   const { gameId } = req.query; // Get gameId from query string
   const role = req.session.user?.role;
 
@@ -158,9 +159,12 @@ async function getLeaderboard(req, res) {
     return res.status(400).send("Game ID is required.");
   }
 
-  try {
-    const db = getDB();
+  // Fetch game details
+  const game = await db
+    .collection("games")
+    .findOne({ _id: new ObjectId(gameId) });
 
+  try {
     // Fetch participants and join with users collection
     const participants = await db
       .collection("gameParticipants")
@@ -187,7 +191,12 @@ async function getLeaderboard(req, res) {
       ])
       .toArray();
 
-    res.render("leaderboard", { participants, gameId, role });
+    res.render("leaderboard", {
+      participants,
+      gameId,
+      role,
+      endDateTime: game.endDateTime,
+    });
   } catch (error) {
     console.error("Error fetching leaderboard:", error.message);
     res.status(500).send("Internal server error");

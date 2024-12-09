@@ -6,10 +6,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title></title>
     <link rel="stylesheet" href="/styles/adminDashboard.css" />
+
+    <script>
+      function updateLeaderboardCountdown(endDateTime) {
+        const currentTime = new Date().getTime();
+        const endTime = new Date(endDateTime).getTime();
+
+        const remainingTime = endTime - currentTime;
+
+        if (remainingTime > 0) {
+          const hours = Math.floor(remainingTime / (1000 * 60 * 60));
+          const minutes = Math.floor(
+            (remainingTime % (1000 * 60 * 60)) / (1000 * 60)
+          );
+          const seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
+          document.getElementById("leaderboard-timer").innerHTML = `
+            Time Remaining: ${hours.toString().padStart(2, "0")}:${minutes
+            .toString()
+            .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+        } else {
+          document.getElementById("leaderboard-timer").innerHTML =
+            "Game Ended! Final Standing";
+          clearInterval(timerInterval); // Stop updating the timer
+        }
+      }
+
+      // Initialize the countdown
+      let timerInterval;
+      window.onload = () => {
+        const endDateTime = "<%= endDateTime %>"; // Pass from server-side
+        timerInterval = setInterval(
+          () => updateLeaderboardCountdown(endDateTime),
+          1000
+        );
+      };
+    </script>
   </head>
   <body>
     <div class="admin-dashboard-container">
-      <!-- Sidebar  -->
       <!-- Sidebar  -->
       <aside class="sidebar">
         <ul>
@@ -30,6 +64,12 @@
       <!-- Main content area -->
       <div class="main-content">
         <h2>Leaderboard</h2>
+
+        <!-- Timer Section -->
+        <div id="leaderboard-timer" class="timer">
+          <!-- Timer will update dynamically -->
+        </div>
+
         <div class="game-section">
           <!-- <h1>Leaderboard standing: for Game: <%= gameId %></h1> -->
           <table>
